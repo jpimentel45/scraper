@@ -26,7 +26,7 @@ router.get('/scraped', (req, res) => {
         var $ = cheerio.load(response.data);
 
         // An empty array to save the data that we'll scrape
-        var results = [];
+        //var results = [];
 
         //===================================================================
         //              NAV BAR REQUEST FOR TEXT AND LINKS
@@ -46,9 +46,9 @@ router.get('/scraped', (req, res) => {
         //===================================================================
 
         $(".js_post_item").each(function (i, element) {
-
-            let title = $(element).text();
-            let link = $(element).find('.sqekv3-5').children().attr("href")
+            var results = [];
+            var title = $(element).text();
+            var link = $(element).find('.sqekv3-5').children().attr("href")
             //var img = $(element).find('.dv4r5q-3')
             // Save these results in an object that we'll push into the results array we defined earlier
             results.push({
@@ -56,19 +56,22 @@ router.get('/scraped', (req, res) => {
                 //image: img,
                 link: link
             });
-        });
 
-        // Log the results once you've looped through each of the elements found with cheerio
-        console.log(results);
+            //var img = $(element).find('.dv4r5q-3')
+           
+            // Log the results once you've looped through each of the elements found with cheerio
+            console.log(results)
 
-        //Create new instance of Article model
-        // Using our Article model, create a new entry
-        let post = new Article(results);
-
-        // Now, save that post to the db
-        post.save(function (err, doc) {
-            // Log any errors
-            err ? err : doc
+            //Create new instance of Article model
+            // Use Article model create a new post
+            let post = new Article(results);
+            console.log("this is the post:" + post)
+            // Now, save that post to the db
+            post.save(function (err, doc) {
+                // Log any errors
+                err ? err : doc
+                console.log("this is the doc:" + doc)
+            });
         });
         res.redirect('/')
     });
