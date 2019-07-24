@@ -7,7 +7,6 @@ const mongoose = require('mongoose');
 var hbs = require('express-handlebars');
 
 var indexRouter = require('./controllers/index');
-var usersRouter = require('./controllers/users');
 var articleRouter = require('./controllers/article-routes');
 var app = express();
 
@@ -39,7 +38,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/', articleRouter);
 
 // catch 404 and forward to error handler
