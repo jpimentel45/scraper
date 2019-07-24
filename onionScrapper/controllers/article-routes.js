@@ -67,17 +67,18 @@ router.get('/scraped', (req, res) => {
             err ? err : doc
         })
     });
-    res.redirect('/')
+    res.redirect('/articles')
 })
 
 //===================================================================
 //             MAIN ROUTE DISPPLAY: RETURN SCRAPPING
 //===================================================================
 router.get('/articles', (req,res)=>{
-    res.send("Hey Bitch")
-    // Article.find({}).exec((err, doc)=>{
-    // err ? err : res.json(doc) 
-    // })
+
+     Article.find({}).exec((err, doc)=>{
+     err ? err : res.json(doc) 
+     //err ? err : doc 
+     })
 })
 
 module.exports = router;

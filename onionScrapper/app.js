@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mongoose = require('mongoose');
+var hbs = require('express-handlebars');
 
 var indexRouter = require('./controllers/index');
 var usersRouter = require('./controllers/users');
@@ -13,6 +14,8 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
+//register partials
+//hbs.registerPartials(__dirname + '/views/partials');
 
 //set up mongoose
 mongoose.connect('mongodb://localhost/scraped');
