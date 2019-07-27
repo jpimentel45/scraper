@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 //comment Collection
 const CommentSchema = new Schema({
-    name: {
+    title: {
         type: String
     },
     body: {

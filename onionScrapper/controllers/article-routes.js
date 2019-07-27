@@ -26,7 +26,7 @@ router.get('/scraped', (req, res) => {
         var $ = cheerio.load(response.data);
 
         // An empty array to save the data that we'll scrape
-        //var results = [];
+        var results = [];
 
         //===================================================================
         //              NAV BAR REQUEST FOR TEXT AND LINKS
@@ -46,37 +46,85 @@ router.get('/scraped', (req, res) => {
         //===================================================================
 
         $(".js_post_item").each(function (i, element) {
-            var results = [];
+            // var results = [];
             var title = $(element).text();
+            // console.log(title);
             var link = $(element).find('.sqekv3-5').children().attr("href")
             //var img = $(element).find('.dv4r5q-3')
             // Save these results in an object that we'll push into the results array we defined earlier
-            results.push({
-                title: title,
-                //image: img,
-                link: link
-            });
+            // results.push({
+            //     title: title,
+            //     //image: img,
+            //     link: link
+            // });
+            var results = {
+                title,
+                link
+            }
+            $(results.link).each(function (i, element) {
+                console.log("this is the element: " + element)
+                // var results = [];
+                var title = $(element).text();
+                // console.log(title);
+                var link = $(element).find('.sqekv3-5').children().attr("href")
+                //var img = $(element).find('.dv4r5q-3')
+                // Save these results in an object that we'll push into the results array we defined earlier
+                // results.push({
+                //     title: title,
+                //     //image: img,
+                //     link: link
+                // });
+                var results = {
+                    title,
+                    link
+                }
 
+                //var img = $(element).find('.dv4r5q-3')
+
+                // Log the results once you've looped through each of the elements found with cheerio
+                // console.log(results)
+
+                //Create new instance of Article model
+                // Use Article model create a new post
+                const post = new Article(results);
+                // console.log("this is the post:" + post)
+                console.log(post);
+                // Now, save that post to the db
+                post.save(function (err) {
+                    // Log any errors
+                    // err ? err : doc
+                    if (err) console.log(err);
+                    // console.log("this is the doc:" + doc)
+                });
+            });
             //var img = $(element).find('.dv4r5q-3')
-           
+
             // Log the results once you've looped through each of the elements found with cheerio
-            console.log(results)
+            // console.log(results)
 
             //Create new instance of Article model
             // Use Article model create a new post
-            let post = new Article(results);
-            console.log("this is the post:" + post)
+            const post = new Article(results);
+            // console.log("this is the post:" + post)
+            console.log(post);
             // Now, save that post to the db
-            post.save(function (err, doc) {
+            post.save(function (err) {
                 // Log any errors
-                err ? err : doc
-                console.log("this is the doc:" + doc)
+                // err ? err : doc
+                if (err) console.log(err);
+                // console.log("this is the doc:" + doc)
             });
         });
         res.redirect('/')
+        
     });
-   
+
 })
+
+
+
+
+
 
 //===================================================================
 //             MAIN ROUTE DISPPLAY: RETURN SCRAPPING
@@ -85,8 +133,36 @@ router.get('/articles', (req, res) => {
 
     Article.find({}).exec((err, doc) => {
         err ? err : res.json(doc)
-        //err ? err : doc 
+        //err ? err : doc
     })
+})
+
+// Route for grabbing a specific Article by id, populate it with it's note
+router.get("/articles/:id", function (req, res) {
+    // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
+    Article.findOne({ _id: req.params.id })
+        // ..and populate all of the notes associated with it
+        .populate("Comment")
+        .then(function (Article) {
+            // If we were able to successfully find an Article with the given id, send it back to the client
+            res.json(Article);
+        })
+        .catch(function (err) {
+            // If an error occurred, send it to the client
+            res.json(err);
+        });
+});
+
+router.post("/articles/: id" , (req, res)=>{
+   Comment.create(req.body).then((Comment)=>{
+       console.log(Comment)
+       return Article.findOneAndUpdate({ _id: req.params.id }, { Comment: Comment._id }, { new: true });
+   }).then((Article)=>{
+       console.log(Article)
+       res.json(Article);
+   }).catch((err)=>{
+       res.json(err);
+   })
 })
 
 module.exports = router;

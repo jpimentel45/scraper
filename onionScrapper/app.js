@@ -1,18 +1,24 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 const mongoose = require('mongoose');
-var hbs = require('express-handlebars');
+const hbs = require('express-handlebars');
 
-var indexRouter = require('./controllers/index');
-var articleRouter = require('./controllers/article-routes');
-var app = express();
+const indexRouter = require('./controllers/index');
+const articleRouter = require('./controllers/article-routes');
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
+app.engine( 'hbs', hbs( {
+    extname: 'hbs',
+    defaultView: 'default',
+    layoutsDir: __dirname + '/views/layouts',
+    partialsDir: __dirname + '/views/partials'
+}));
 //register partials
 //hbs.registerPartials(__dirname + '/views/partials');
 
@@ -20,7 +26,7 @@ app.set('view engine', 'hbs');
 
 
 
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
 
 mongoose.connect(MONGODB_URI);
 const db = mongoose.connection;
