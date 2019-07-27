@@ -10,6 +10,15 @@ body {
     text-align: center;
 }
 
+#articles {
+    flex-wrap: wrap;
+    display: flex;
+}
+
+p {
+    flex: 1 1 33.33%;
+}
+
 ul {
     list-style: none;
     flex-wrap: wrap;
