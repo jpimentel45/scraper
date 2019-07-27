@@ -39,9 +39,12 @@ app.use(express.json());
 app.use(express.static("public"));
 app.use("/", articleRouter);
 // Connect to the Mongo DB
-mongoose.connect("mongodb://localhost/unit18Populater", {
-  useNewUrlParser: true
-});
+// mongoose.connect("mongodb://localhost/unit18Populater", {
+//   useNewUrlParser: true
+// });
+MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+
+mongoose.connect(MONGODB_URI);
 
 // Routes
 
